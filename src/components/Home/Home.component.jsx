@@ -12,7 +12,7 @@ function Home()
                     dzielić się inspiracjami oraz korzystać z przydatnych porad ogrodniczych.
                     Aplikacja to idealne narzędzie do monitorowania i zarządzania waszym ogrodem z łatwością.
                  </p>
-            <Button component={Link} to="/login" variant="contained" color="primary">
+            <Button component={Link} to="/login" variant="contained" color="success">
                 Przejdź do logowania
             </Button>
         </div>

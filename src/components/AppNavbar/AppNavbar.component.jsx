@@ -26,7 +26,7 @@ function AppNavbar()
                                 component={Link}
                                 to={x.url}
                                 variant="outlined"
-                                color="primary"
+                                color="success"
                                 size="large"
                                 
                             >

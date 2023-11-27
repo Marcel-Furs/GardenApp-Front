@@ -40,3 +40,11 @@
   .user-form h1 {
     text-align: center;
   }
+
+  .valid {
+    color: green; 
+  }
+  
+  .invalid {
+    color: red; 
+  }

@@ -6,7 +6,7 @@ function Register()
         <div class="center-container">
 
         <form class="register-form"  >           {/** onSubmit={onSubmit}*/}
-        <h1>Register</h1>
+        <h1>Rejestracja</h1>
               <div className="mb-3">
                 <label htmlFor="username" className="form-label">Nazwa użytkownika</label>
                 <input type="text" className="form-control" id="username" ></input> {/** onInput={e => setUsername(e.target.value)}*/}
