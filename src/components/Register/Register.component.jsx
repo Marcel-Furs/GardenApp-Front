@@ -1,3 +1,4 @@
+import './Register.component.css';
 
 function Register()
 {

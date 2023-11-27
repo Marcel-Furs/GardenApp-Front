@@ -1,11 +1,13 @@
 .home-container {
     text-align: center;
     padding: 59px;
+    margin: 0 auto;
+    max-width: 1400px;
 }
 
 .welcome-text {
     font-size: 25px;
     line-height: 1.6;
     margin-top: 10px;
-    color: #333; /* Kolor tekstu */
+    color: #333;
 }

@@ -20,7 +20,7 @@ function Login()
               <input type="password" className="form-control" id="password" ></input> {/*onInput={e => setPassword(e.target.value)}></input*/}
             </div>
 
-          <button type="submit" className="btn-primary">Zaloguj</button>
+          <button type="submit" className="btn btn-success">Zaloguj</button>
 
         </form>
         <p></p>
