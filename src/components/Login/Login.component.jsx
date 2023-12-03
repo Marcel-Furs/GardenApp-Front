@@ -4,79 +4,73 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import toast from 'react-hot-toast'
 import { Button } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { useRef, useState, useEffect } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
+import { useState } from "react";
+import { useNavigate } from 'react-router-dom';
+import { LoginContext } from '../../context/LoginContext';
+import { useContext } from 'react';
+import { post } from '../../api/requests.component';
+import { ENDPOINTS } from '../../api/urls.component';
 
 
 function Login()
 {
-  const USER_REGEX = /^[a-zA-z][a-zA-Z0-9-_]{3,23}$/;
-  //const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;   regex dla hasła
-  const userRef = useRef();
-  const errRef = useRef();
-  const [user, setUser] = useState('');
-  const [validName, setValidName] = useState(false);
-  const [userFocus, setUserFocus] = useState(false);
-  const [errMsg, setErrMsg] = useState('');
+  const navigate = useNavigate()
+    const [komunikat, setKomunikat] = useState("<pusty>")
+    const [username, setUsername] = useState("")
+    const [password, setPassword] = useState("")
+    const [token, setToken] = useContext(LoginContext)
+  
+    const ustawKomunikat = (nowy) => {
+      setKomunikat(nowy)
+      console.log(nowy)
+    }
+  
+    const onSubmit = async (e) => {
+      e.preventDefault(); //dezaktywuje odswiezanie formularza po kliknieciu w submit
+        console.log("Username " + username + " password " + password)
+  
+        const body = {
+          username: username,
+          password: password
+        }
+        
+        const onSuccess = (response, data) => {
+          console.log(data.token)
+          localStorage.setItem("token", data.token)
+          toast.success('Udało się zalogować!')
+          navigate("/")
+          setToken(data.token)
+        }
 
-  useEffect(() => {
-    userRef.current.focus();
-}, [])
+        const onFail = (response) => {
+          toast.error("Nieudane logowanie!")
+          toast.error("Error code: " + response.status)
+        }
 
-useEffect(() => {
-  setValidName(USER_REGEX.test(user));
-}, [user])
-
-  const handleUserInput = (e) => {
-  const inputValue = e.target.value;
-    setUser(inputValue);
-    setValidName(USER_REGEX.test(inputValue));
-  };
+        await post(ENDPOINTS.Login, body, onSuccess, onFail)
+    }
 
     return(
       <div className="center-container">
-        <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p>
-      <form className="user-form">
+
+      <form className="user-form" onSubmit={onSubmit}>
         <h1>Witamy ponownie!</h1>
       <div className="mb-3">
           <label htmlFor="username" className="form-label">
             Nazwa użytkownika:
-            <FontAwesomeIcon icon={validName ? faCheck : faTimes} className={validName ? 'valid' : 'invalid'} />
           </label>
           <input
             type="text"
             id="username"
-            ref={userRef}
-            autoComplete = "off"
-            className={`form-control ${validName ? '' : 'is-invalid'}`}
-            onChange={(e) => setUser(e.target.value)}
-            required
-            aria-invalid={validName ? 'false' : 'true'}
-            aria-describedby="uidnote"
-            onFocus={() => setUserFocus(true)}
-            onBlur={() => setUserFocus(false)}
-            value={user}
+            className="form-control"
+            onInput={e => setUsername(e.target.value)}
           />
-
-          {/* onInput={e => setUsername(e.target.value)} */}
-          <div className="invalid-feedback">
-          {user.trim() !== '' && userFocus && !validName && (
-          <p id="uidnote" className="instructions">
-          <FontAwesomeIcon icon={faInfoCircle} />
-          4 do 24 wyrazów.<br />
-          Wymagane zaczęcie od wielkiej litery.<br />
-          Litery, liczby, podkreślenia, myślniki dozwolone.
-          </p>
-          )}
-        </div>
       </div>
         <div className="mb-3">
           <label htmlFor="password" className="form-label">
             Hasło
           </label>
-          <input type="password" className="form-control" id="password" />
-          {/* onInput={e => setPassword(e.target.value)}></input */}
+          <input type="password" className="form-control" id="password" onInput={e => setPassword(e.target.value)}/>
         </div>
 
         <button type="submit" className="btn btn-success">

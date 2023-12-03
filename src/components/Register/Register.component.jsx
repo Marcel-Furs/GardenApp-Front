@@ -2,9 +2,43 @@ import './Register.component.css';
 import { useRef, useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
+import {ENDPOINTS} from "../../api/urls.component"
+import { post } from "../../api/requests.component";
+import toast from 'react-hot-toast'
 
 function Register()
 {
+  const navigate = useNavigate()
+  const [username, setUsername] = useState("")
+  const [password1, setPassword1] = useState("")
+  const [password2, setPassword2] = useState("")
+
+  const onSubmit = async (e) => {
+    e.preventDefault(); //dezaktywuje odswiezanie formularza po kliknieciu w submit
+
+      if(password1 !== password2)
+      {
+          toast.error("Hasła nie są takie same!")
+          return;
+      }  
+      
+      const onSuccess = (response, data) => {
+        toast.success('Pomyślnie zarejestrowano!')
+        navigate("/login")
+      }
+
+      const onFail = (response) => {
+        toast.error("Register failed!")
+      }
+
+      const body = {
+        username: username,
+        password: password1
+      }
+     await post(ENDPOINTS.Register, body, onSuccess, onFail)
+  }
+
   const USER_REGEX = /^[a-zA-z][a-zA-Z0-9-_]{3,23}$/;
   //const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;   regex dla hasła
   const userRef = useRef();
@@ -33,7 +67,7 @@ function Register()
       
         <div class="center-container">
           <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p>
-        <form class="register-form"  >           {/** onSubmit={onSubmit}*/}
+        <form class="register-form"  onSubmit={onSubmit}>           
         <h1>Rejestracja</h1>
           <div className="mb-3">
                 <label htmlFor="username" className="form-label">
@@ -53,8 +87,10 @@ function Register()
                 onFocus={() => setUserFocus(true)}
                 onBlur={() => setUserFocus(false)}
                 value={user}
+
+                onInput={e => setUsername(e.target.value)}
                 >
-                </input> {/** onInput={e => setUsername(e.target.value)}*/}
+                </input>
                 <div className="invalid-feedback">
                 {user.trim() !== '' && userFocus && !validName && (
                 <p id="uidnote" className="instructions">
@@ -68,11 +104,11 @@ function Register()
               </div>
               <div className="mb-3">
                 <label htmlFor="password" className="form-label">Hasło</label>
-                <input type="password" className="form-control" id="password" ></input> {/**  onInput={e => setPassword1(e.target.value)} */}
+                <input type="password" className="form-control" id="password" onInput={e => setPassword1(e.target.value)}></input>
               </div>
               <div className="mb-3">
                 <label htmlFor="password" className="form-label">Powtórz hasło</label>
-                <input type="password" className="form-control" id="password" ></input>  {/**  onInput={e => setPassword2(e.target.value)} */}
+                <input type="password" className="form-control" id="password" onInput={e => setPassword2(e.target.value)}></input>
               </div>
             <button className="btn btn-success" type="submit">Register</button>
         </form>
