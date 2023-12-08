@@ -39,7 +39,7 @@ function Login()
           localStorage.setItem("token", data.token)
           toast.success('Udało się zalogować!')
           navigate("/")
-          setToken(data.token)
+          setToken(data.token);
         }
 
         const onFail = (response) => {

@@ -10,6 +10,8 @@ import Register from './components/Register/Register.component'
 import Authorized from './common/Authorized.component';
 import Logout from './components/Logout/Logout.component'
 import Plant from './components/Plant/Plant.component'
+import Measurement from './components/Measurement/Measurement.component'
+import PickCalendar from './components/PickCalendar/PickCalendar.component'
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token"))
@@ -25,6 +27,8 @@ function App() {
             <Route path='/register' element={<Register/>} />
 
             <Route path='/plant' element={<Authorized><Plant /></Authorized>} />
+            <Route path='/measurement' element={<Authorized><Measurement /></Authorized>} />
+            <Route path='/pickcalendar' element={<Authorized><PickCalendar /></Authorized>} />
             <Route path='/logout' element={<Authorized><Logout /></Authorized>} />
           </Routes>
           </LoginContext.Provider>

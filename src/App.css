@@ -112,3 +112,13 @@ body {
   from {opacity: 0} 
   to {opacity: 1}
 }
+
+.css-4pax7l-MuiPickersLayout-root {
+  display: grid;
+  grid-auto-columns: max-content auto max-content;
+  grid-auto-rows: max-content auto max-content;
+  overflow: hidden;
+  min-width: 100px !important;
+  max-width: 400px !important;
+  background-color: var(--secondary-color) !important;
+}
