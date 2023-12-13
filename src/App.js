@@ -12,6 +12,7 @@ import Logout from './components/Logout/Logout.component'
 import Plant from './components/Plant/Plant.component'
 import Measurement from './components/Measurement/Measurement.component'
 import PickCalendar from './components/PickCalendar/PickCalendar.component'
+import Task from './components/Task/Task.component'
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token"))
@@ -28,6 +29,7 @@ function App() {
 
             <Route path='/plant' element={<Authorized><Plant /></Authorized>} />
             <Route path='/measurement' element={<Authorized><Measurement /></Authorized>} />
+            <Route path='/task' element={<Authorized><Task /></Authorized>} />
             <Route path='/pickcalendar' element={<Authorized><PickCalendar /></Authorized>} />
             <Route path='/logout' element={<Authorized><Logout /></Authorized>} />
           </Routes>

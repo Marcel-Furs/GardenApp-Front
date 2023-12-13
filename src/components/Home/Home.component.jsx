@@ -16,7 +16,7 @@ function Home()
         </p>
 
         {token != null ? (
-          <p>Jesteś już zalogowany!</p>
+          <p></p>
         ) : (
           <Button component={Link} to="/login" variant="contained" color="success">
             Przejdź do logowania

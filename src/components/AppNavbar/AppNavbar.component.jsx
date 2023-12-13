@@ -24,6 +24,7 @@ function AppNavbar()
         { url: "/register", name: "Rejestracja", auth: false },
         { url: "/plant", name: "Dodaj rośline", auth: true },
         { url: "/measurement", name: "Pomiary", auth: true },
+        { url: "/task", name: "Zadania", auth: true },
         { url: "/pickcalendar", name: "Kalendarz", auth: true },
         { url: "/logout", name: "Wyloguj", auth: true }
     ]
