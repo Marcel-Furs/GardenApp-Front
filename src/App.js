@@ -13,6 +13,7 @@ import Plant from './components/Plant/Plant.component'
 import Measurement from './components/Measurement/Measurement.component'
 import PickCalendar from './components/PickCalendar/PickCalendar.component'
 import Task from './components/Task/Task.component'
+import Plants from './components/Plants/Plants.component'
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token"))
@@ -28,6 +29,7 @@ function App() {
             <Route path='/register' element={<Register/>} />
 
             <Route path='/plant' element={<Authorized><Plant /></Authorized>} />
+            <Route path='/plants' element={<Authorized><Plants /></Authorized>} />
             <Route path='/measurement' element={<Authorized><Measurement /></Authorized>} />
             <Route path='/task' element={<Authorized><Task /></Authorized>} />
             <Route path='/pickcalendar' element={<Authorized><PickCalendar /></Authorized>} />

@@ -1,8 +1,9 @@
 # Getting Started with Create React App
 
 Pushowanie
-
-
+git add .
+git commit -m "komentarz"
+git push
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
