@@ -42,6 +42,7 @@ function PickCalendar() {
   const navigate = useNavigate();
   const [showObjects, setShowObjects] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [allDays, setAllDays] = useState([]);
 
   const handleOkClick = () => {
     const formattedDate = format(calendarValue.toDate(), 'yyyy-MM-dd');
@@ -49,9 +50,10 @@ function PickCalendar() {
 
     const selectedDate = calendarValue.toDate();
     const selectedDay = selectedDate.getDate();
-
+    const newDate = calendarValue.toDate();
     // Tworzymy nową listę dni, która zawiera wszystkie dni z aktualnej listy highlightedDays oraz wybrany dzień
-    const updatedHighlightedDays = [...highlightedDays, selectedDay];
+    const updatedHighlightedDays = [...highlightedDays, format(newDate, 'yyyy-MM-dd')];
+  setHighlightedDays(updatedHighlightedDays);
   
     setHighlightedDays(updatedHighlightedDays);
     setSelectedDate(selectedDate);
@@ -61,13 +63,13 @@ function PickCalendar() {
 
   const handleRemoveClick = () => {
     if (calendarValue) {
-      const dateToRemove = calendarValue.toDate();
-      setHighlightedDays((prevDays) =>
-        prevDays.filter((day) => day !== dateToRemove.getDate())
+      const dateToRemove = format(calendarValue.toDate(), 'yyyy-MM-dd');
+      setHighlightedDays(prevDays =>
+        prevDays.filter(day => day !== dateToRemove)
       );
       setSelectedDate(null);
       setNewSelectedDate(null);
-      setIsFormOpen(false); // Zamyka formularz
+      setIsFormOpen(false);
     }
   }
 
@@ -131,24 +133,40 @@ function PickCalendar() {
   const renderDaysList = () => {
     return (
       <div style={{ display: 'flex', overflowX: 'auto' }}>
-        <h2>Lista dni:</h2>
-        <ul style={{ display: 'flex', padding: 0, margin: 0, listStyleType: 'none' }}>
-          {days.map((day) => (
-            <li key={day.id} style={{ margin: '0 10px' }}>
-              <p>Data: {format(new Date(day.eventDate), 'yyyy-MM-dd')}</p>
-              <p>Opis: {day.description}</p>
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={() => handleRemoveDay(day)}
-              >
-                Odznacz
-              </Button>
-            </li>
-          ))}
-        </ul>
+        <Grid container spacing={2} style={{ padding: '10px' }}>
+          {days.map((day) => {
+            const eventDate = new Date(day.eventDate);
+            if (!isNaN(eventDate)) {
+              return (
+                <Grid item xs={12} sm={6} md={4} lg={3} key={day.id}>
+                  <div style={dayCardStyle}>
+                    <p>Data: {format(eventDate, 'yyyy-MM-dd')}</p>
+                    <p>Opis: {day.description}</p>
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      onClick={() => handleRemoveDay(day)}
+                      style={{ marginTop: '10px' }}
+                    >
+                      Odznacz
+                    </Button>
+                  </div>
+                </Grid>
+              );
+            }
+            return null;
+          })}
+        </Grid>
       </div>
     );
+  };
+  const dayCardStyle = {
+    border: '1px solid #ddd',
+    padding: '10px',
+    borderRadius: '4px',
+    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+    textAlign: 'center',
+    backgroundColor: '#9ce9b0'
   };
 
   const handleRemoveDay = (day) => {
@@ -162,25 +180,26 @@ function PickCalendar() {
   };
 
   const handleShowDaysClick = async () => {
-      const onSuccess = (response, data) => {
-        setDays(data);
-        const highlightedDates = data.map((day) => new Date(day.eventDate).getDate());
-        setHighlightedDays([...highlightedDays, ...highlightedDates]);
-        setShowObjects(true);
-      };
+    const onSuccess = (response, data) => {
+      const formattedDays = data.map(day => ({
+        ...day,
+        eventDate: format(new Date(day.eventDate), 'yyyy-MM-dd')
+      }));
+      setDays(formattedDays);
   
-      const onFail = (response) => {
-        toast.error('Login failed!');
-        toast.error('Error code: ' + response.status);
+      // Aktualizuj stan highlightedDays
+      const newHighlightedDays = formattedDays.map(day => day.eventDate);
+      setHighlightedDays(newHighlightedDays);
   
-        if (response.status === 401) {
-          navigate('/logout');
-        }
-      };
+      setShowObjects(true);
+    };
   
-      console.log(parseInt(userId, 10));
-      await get(ENDPOINTS.Days.replace('{id}', parseInt(userId, 10)), onSuccess, onFail, token);
-  };
+    const onFail = (response) => {
+      toast.error('Błąd podczas ładowania danych!');
+    };
+  
+    await get(ENDPOINTS.Days.replace('{id}', parseInt(userId, 10)), onSuccess, onFail, token);
+  };    
 
   const fetchHighlightedDays = (date) => {
     setTimeout(() => {
@@ -189,15 +208,69 @@ function PickCalendar() {
     }, 500);
   };
 
-  const handleMonthChange = (date) => {
-    if (requestAbortController.current) {
-      requestAbortController.current.abort();
+  useEffect(() => {
+    const fetchAllDays = async () => {
+      const onSuccess = (response, data) => {
+        // Przetwórz dane i ustaw stan 'allDays'
+        const formattedDays = data.map(day => ({
+          ...day,
+          eventDate: format(new Date(day.eventDate), 'yyyy-MM-dd')
+        }));
+        setAllDays(formattedDays);
+      };
+      
+      const onFail = (response) => {
+        toast.error('Błąd podczas ładowania danych!');
+      };
+      
+      // Pobierz wszystkie dni dla użytkownika
+      await get(ENDPOINTS.Days.replace('{id}', parseInt(userId, 10)), onSuccess, onFail, token);
+    };
+  
+    if (userId) {
+      fetchAllDays();
     }
+  }, [userId]);
 
-    setIsLoading(true);
-    setHighlightedDays([]);
-    fetchHighlightedDays(date);
+  useEffect(() => {
+    return () => {
+      setHighlightedDays([]);
+      setAllDays([]);
+    };
+  }, []);
+
+  useEffect(() => {
+    // Te zmienne muszą być zdefiniowane wewnątrz useEffect
+    const startOfMonth = calendarValue.startOf('month').format('YYYY-MM-DD');
+    const endOfMonth = calendarValue.endOf('month').format('YYYY-MM-DD');
+  
+    const daysInMonth = allDays.filter(day => {
+      const dayDate = dayjs(day.eventDate);
+      return (dayDate.isSame(startOfMonth, 'day') || dayDate.isAfter(startOfMonth)) &&
+             (dayDate.isSame(endOfMonth, 'day') || dayDate.isBefore(endOfMonth));
+    });
+  
+    setHighlightedDays(daysInMonth.map(day => day.eventDate));
+  }, [calendarValue, allDays]);
+  
+  const handleMonthChange = (newMonthValue) => {
+    // Ustawienie kalendarza na pierwszy dzień nowego miesiąca
+    const firstDayOfMonth = newMonthValue.startOf('month');
+    setCalendarValue(firstDayOfMonth);
+  
+    // Aktualizowanie podświetlonych dni
+    const startOfMonth = firstDayOfMonth.format('YYYY-MM-DD');
+    const endOfMonth = firstDayOfMonth.endOf('month').format('YYYY-MM-DD');
+    
+    const daysInMonth = allDays.filter(day => {
+      const dayDate = dayjs(day.eventDate);
+      return dayDate.isAfter(startOfMonth) && dayDate.isBefore(endOfMonth);
+    });
+  
+    setHighlightedDays(daysInMonth.map(day => day.eventDate));
   };
+  
+  
 
   return (
     <Grid container spacing={2} justifyContent="center" style={{ flexDirection: 'column' }}>
@@ -214,8 +287,9 @@ function PickCalendar() {
             }}
             slotProps={{
               day: {
-                highlightedDays,
-                days, // Przekazujemy listę dni do komponentu ServerDay
+                highlightedDays: highlightedDays.map(day => format(new Date(day), 'yyyy-MM-dd')),
+                days: days,
+                currentMonth: calendarValue.month()
               },
             }}
           />

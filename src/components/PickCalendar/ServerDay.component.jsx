@@ -8,32 +8,38 @@ import { parseJwt } from '../Helpers/helpers.component';
 import Badge from '@mui/material/Badge';
 import { PickersDay } from '@mui/x-date-pickers/PickersDay';
 import SpaIcon from '@mui/icons-material/Spa';
+import { format } from 'date-fns';
 
 export function ServerDay(props) {
-  const [token] = useContext(LoginContext);
-  const navigate = useNavigate();
-  const [days, setDays] = useState([]);
-  const [userId, setUserId] = useState(null);
-
-  const { highlightedDays = [], day, outsideCurrentMonth, ...other } = props;
+  const { currentMonth, highlightedDays = [], days = [], day, outsideCurrentMonth, ...other } = props;
 
   const date = day.toDate();
+  const formattedDate = format(date, 'yyyy-MM-dd');
 
-  const isSelected = highlightedDays.includes(day.date());
+  // Sprawdź czy dzień jest w obecnym miesiącu.
+  const isInCurrentMonth = day.month() === currentMonth;
 
-  const isDayInDatabase = days.some((databaseDay) => {
-    const databaseDate = new Date(databaseDay.eventDate);
-    return day.isSame(databaseDate, 'day');
+  const isSelected = isInCurrentMonth && highlightedDays.some(highlightedDate => {
+    const validDate = new Date(highlightedDate);
+    return !isNaN(validDate) && format(validDate, 'yyyy-MM-dd') === formattedDate;
   });
+
+  const isDayInDatabase = isInCurrentMonth && days.some(databaseDay => 
+    databaseDay.eventDate === formattedDate
+  );
 
   return (
     <Badge
       key={day.toString()}
       overlap="circular"
       badgeContent={isSelected ? <SpaIcon color="success" /> : undefined}
-      color={isDayInDatabase ? 'primary' : 'default'}
+      color={isDayInDatabase ? 'default' : 'default'}
     >
-      <PickersDay {...other} outsideCurrentMonth={outsideCurrentMonth} day={day} />
+      <PickersDay 
+        {...other} 
+        day={day} 
+        outsideCurrentMonth={outsideCurrentMonth}
+      />
     </Badge>
   );
 }

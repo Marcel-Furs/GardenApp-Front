@@ -14,6 +14,7 @@ import Measurement from './components/Measurement/Measurement.component'
 import PickCalendar from './components/PickCalendar/PickCalendar.component'
 import Task from './components/Task/Task.component'
 import Plants from './components/Plants/Plants.component'
+import Chart from './components/Chart/Chart.component'
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token"))
@@ -32,6 +33,7 @@ function App() {
             <Route path='/plants' element={<Authorized><Plants /></Authorized>} />
             <Route path='/measurement' element={<Authorized><Measurement /></Authorized>} />
             <Route path='/task' element={<Authorized><Task /></Authorized>} />
+            <Route path='/chart' element={<Authorized><Chart /></Authorized>} />
             <Route path='/pickcalendar' element={<Authorized><PickCalendar /></Authorized>} />
             <Route path='/logout' element={<Authorized><Logout /></Authorized>} />
           </Routes>

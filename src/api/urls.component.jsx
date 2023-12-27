@@ -6,5 +6,7 @@ export const ENDPOINTS = {
     UploadFile: BASE_URL + '/Plant/Create',
     UploadCalendar: BASE_URL + '/Calendar/create',
     Days: BASE_URL + '/Calendar/{id}/days',
-    UpdateDayStatus: BASE_URL + '/Calendar/{dayId}/update'
+    UpdateDayStatus: BASE_URL + '/Calendar/{dayId}/update',
+    Data: BASE_URL + '/Chart/{id}/{city}/data',
+    AddCity: BASE_URL + '/Chart/AddCity'
 }

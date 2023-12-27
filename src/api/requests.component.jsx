@@ -39,3 +39,18 @@ export async function get(url, success_callback = (response, data) => {}, fail_c
       }
       await runRequest(url, options, success_callback, fail_callback)
 }
+
+export async function get2(url, id, city, success_callback = (response, data) => {}, fail_callback = (response) => {}, token=null) {
+  const options = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    }
+    if(token != null) {
+      options.headers["Authorization"] = "Bearer " + token;
+    }
+    // Zastosowanie szablonu literałów, aby wstawić id i city do ścieżki URL
+    const fullUrl = url.replace('{id}', id).replace('{city}', city);
+    await runRequest(fullUrl, options, success_callback, fail_callback)
+}
