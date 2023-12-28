@@ -8,5 +8,9 @@ export const ENDPOINTS = {
     Days: BASE_URL + '/Calendar/{id}/days',
     UpdateDayStatus: BASE_URL + '/Calendar/{dayId}/update',
     Data: BASE_URL + '/Chart/{id}/{city}/data',
-    AddCity: BASE_URL + '/Chart/AddCity'
+    AddCity: BASE_URL + '/Chart/AddCity',
+    Reminder: BASE_URL + '/Home/{id}/days',
+    Alert: BASE_URL + '/Home/{id}/{city}/alert',
+    Late: BASE_URL + '/Home/{id}/latedays',
+    UpdateLDay: BASE_URL + '/Home/{dayId}/updatelateday'
 }

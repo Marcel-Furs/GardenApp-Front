@@ -54,3 +54,27 @@ export async function get2(url, id, city, success_callback = (response, data) =>
     const fullUrl = url.replace('{id}', id).replace('{city}', city);
     await runRequest(fullUrl, options, success_callback, fail_callback)
 }
+
+export async function get3(url, id, city, success_callback, fail_callback, token = null) {
+  const options = {
+      method: "GET",
+      headers: {
+          "Content-Type": "application/json",
+          ...(token && { "Authorization": `Bearer ${token}` })
+      }
+  };
+
+  const fullUrl = url.replace('{id}', id).replace('{city}', city);
+
+  try {
+      const response = await fetch(fullUrl, options);
+      if (response.ok) {
+          const data = await response.json();
+          success_callback(data); // Upewnij się, że przekazujesz dane do success_callback
+      } else {
+          fail_callback(response);
+      }
+  } catch (error) {
+      fail_callback(error);
+  }
+}
