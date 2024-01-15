@@ -14,8 +14,13 @@ function Register()
   const [password1, setPassword1] = useState("")
   const [password2, setPassword2] = useState("")
 
+
   const onSubmit = async (e) => {
-    e.preventDefault(); //dezaktywuje odswiezanie formularza po kliknieciu w submit
+    e.preventDefault();
+    if (password1.length < 4 || username.length < 4) {
+      toast.error("Hasło musi zawierać co najmniej 4 znaki!");
+      return;
+    }
 
       if(password1 !== password2)
       {
@@ -40,21 +45,39 @@ function Register()
   }
 
   const USER_REGEX = /^[a-zA-z][a-zA-Z0-9-_]{3,23}$/;
-  //const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;   regex dla hasła
+  const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/
   const userRef = useRef();
   const errRef = useRef();
   const [user, setUser] = useState('');
   const [validName, setValidName] = useState(false);
   const [userFocus, setUserFocus] = useState(false);
+  const [pwd, setPwd] = useState('');
+  const [validPwd, setValidPwd] = useState(false);
+  const [pwdFocus, setPwdFocus] = useState(false);
+
+  const [matchPwd, setMatchPwd] = useState('');
+  const [validMatch, setValidMatch] = useState(false);
+  const [matchFocus, setMatchFocus] = useState(false);
+  const [success, setSuccess] = useState(false);
+
   const [errMsg, setErrMsg] = useState('');
 
   useEffect(() => {
-  userRef.current.focus();
-  }, [])
+    userRef.current.focus();
+}, [])
 
-  useEffect(() => {
-  setValidName(USER_REGEX.test(user));
-  }, [user])
+useEffect(() => {
+    setValidName(USER_REGEX.test(user));
+}, [user])
+
+useEffect(() => {
+    setValidPwd(PWD_REGEX.test(pwd));
+    setValidMatch(pwd === matchPwd);
+}, [pwd, matchPwd])
+
+useEffect(() => {
+  setErrMsg('');
+}, [user, pwd, matchPwd])
 
   const handleUserInput = (e) => {
   const inputValue = e.target.value;
@@ -63,8 +86,7 @@ function Register()
   };
 
 
-    return(
-      
+  return(
         <div class="center-container">
           <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p>
         <form class="register-form"  onSubmit={onSubmit}>           
@@ -103,14 +125,31 @@ function Register()
           </div>
               </div>
               <div className="mb-3">
-                <label htmlFor="password" className="form-label">Hasło</label>
-                <input type="password" className="form-control" id="password" onInput={e => setPassword1(e.target.value)}></input>
+                <label htmlFor="password" className="form-label">Hasło
+                <FontAwesomeIcon icon={faTimes} className={validPwd || !pwd ? "hide" : "invalid"} />
+                </label>
+                <input
+                type="password" 
+                className="form-control" 
+                id="password" 
+                onInput={e => setPassword1(e.target.value)}
+                aria-invalid={validPwd ? "false" : "true"}
+                onFocus={() => setPwdFocus(true)}
+                onBlur={() => setPwdFocus(false)}
+                aria-describedby="pwdnote"
+                />
+                <p id="pwdnote" className={pwdFocus && !validPwd ? "instructions" : "offscreen"}>
+                            <FontAwesomeIcon icon={faInfoCircle} />
+                            4 do 24 wyrazów.<br />
+                            Wymagane zaczęcie od wielkiej litery.<br />
+                Litery, liczby, podkreślenia, myślniki dozwolone.
+                        </p>
               </div>
               <div className="mb-3">
                 <label htmlFor="password" className="form-label">Powtórz hasło</label>
                 <input type="password" className="form-control" id="password" onInput={e => setPassword2(e.target.value)}></input>
               </div>
-            <button className="btn btn-success" type="submit">Register</button>
+            <button className="btn btn-success" type="submit">Zatwierdź</button>
         </form>
         </div>
     ); 

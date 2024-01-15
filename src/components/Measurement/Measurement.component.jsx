@@ -1,129 +1,134 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-import Grid from '@mui/material/Unstable_Grid2';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import toast from 'react-hot-toast';
+import { ENDPOINTS } from "../../api/urls.component";
+import { parseJwt } from '../Helpers/helpers.component';
+import { LoginContext } from '../../context/LoginContext';
+import { get } from '../../api/requests.component';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 
-const TitleBox = styled(Box)(({ theme }) => ({
+
+const StyledCard = styled(Card)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  padding: theme.spacing(1),
-  textAlign: 'center',
   color: theme.palette.text.secondary,
 }));
 
-const ContentBox = styled(Box)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  padding: theme.spacing(1),
+const TitleTypography = styled(Typography)(({ theme }) => ({
+  fontSize: '1rem',
+  fontWeight: 'bold',
   textAlign: 'center',
-  color: theme.palette.text.secondary,
-  fontSize: '12px',
-  textTransform: 'uppercase',
+  padding: theme.spacing(1),
+  color: theme.palette.text.primary,
 }));
 
-function Measurement() {
+function Measurement({ controller }) {
+  const [userId, setUserId] = useState(null);
   const [temperature, setTemperature] = useState(null);
   const [humidity, setHumidity] = useState(null);
+  const [token] = useContext(LoginContext);
+  const [deviceName, setDeviceName] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+    if (token) {
+      const decodedToken = parseJwt(token);
+      if (decodedToken && decodedToken.nameid) {
+        setUserId(decodedToken.nameid);
+      }
+    }
+  }, [token]);
 
-        const randomTemperature = Math.floor(Math.random() * 30) + 10;
-        const randomHumidity = Math.floor(Math.random() * 50) + 40;
+  useEffect(() => {
+    if (userId && !isNaN(userId)) {
+      console.log('UserId is set and is a number:', userId);
+      getDevices();
+    }
+  }, [userId]);
 
-        setTemperature(randomTemperature);
-        setHumidity(randomHumidity);
+  useEffect(() => {
+    const generateRandomData = () => {
+      const randomTemperature = Math.floor(Math.random() * 35) + 5;
+      const randomHumidity = Math.floor(Math.random() * 100) + 1;
+      setTemperature(randomTemperature);
+      setHumidity(randomHumidity);
+    };
 
-        await delay(1000);
+    if (controller) {
+      generateRandomData();
+    }
+  }, [controller]);
 
-      } catch (error) {
-        console.error('Wystąpił błąd podczas pobierania danych:', error.message);
+  const getDevices = async () => {
+    const onSuccess = (resp, data) => {
+      if (data.length > 0) {
+        setDeviceName(data[0].deviceName);
       }
     };
 
-    fetchData();
-  }, []);
+    const onFail = (resp) => {
+      toast.error("Failed to fetch data");
+    };
+    await get(ENDPOINTS.GetDevice.replace('{id}', parseInt(userId, 10)), onSuccess, onFail, token);
+  };
 
   return (
-    <>
-      {temperature !== null && humidity !== null && (
-        <>
-          <Grid xs={6} lg={3}>
-            <Paper>
-              <ContentBox>
-                Temperatura
-              </ContentBox>
-              <Box component="ul" aria-labelledby="category-a" sx={{ pl: 2 }}>
-                <li>{`${temperature} °C`}</li>
-              </Box>
-            </Paper>
-          </Grid>
-          <Grid xs={6} lg={3}>
-            <Paper>
-              <ContentBox>
-                Wilgotność
-              </ContentBox>
-              <Box component="ul" aria-labelledby="category-b" sx={{ pl: 2 }}>
-                <li>{`${humidity} %`}</li>
-              </Box>
-            </Paper>
-          </Grid>
-        </>
-      )}
-    </>
+    <Grid container spacing={2}>
+      <Grid item xs={12} md={6}>
+        <StyledCard>
+          <CardContent>
+            <TitleTypography>Temperatura</TitleTypography>
+            <Typography variant="h5" component="div">
+              {temperature !== null ? `${temperature}°C` : 'Brak danych'}
+            </Typography>
+          </CardContent>
+        </StyledCard>
+      </Grid>
+      <Grid item xs={12} md={6}>
+        <StyledCard>
+          <CardContent>
+            <TitleTypography>Wilgotność</TitleTypography>
+            <Typography variant="h5" component="div">
+              {humidity !== null ? `${humidity}%` : 'Brak danych'}
+            </Typography>
+          </CardContent>
+        </StyledCard>
+      </Grid>
+    </Grid>
   );
 }
 
 export default function NestedGrid() {
+  const [controller, setController] = useState('');
+
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <div>
       <Grid container spacing={4}>
-        <Grid xs={12} md={5} lg={4}>
-          <Paper>
-            <TitleBox>
-              Podane pomiary:
-            </TitleBox>
-          </Paper>
+        <Grid item xs={12}>
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <FormControl style={{ minWidth: 120 }}>
+              <Select
+                value={controller}
+                onChange={(e) => setController(e.target.value)}
+                displayEmpty
+                inputProps={{ 'aria-label': 'Without label' }}
+              >
+                <MenuItem value="" disabled>
+                  Wybierz mikrokontroler
+                </MenuItem>
+                <MenuItem value={'Esp-32'}>Esp-32</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
         </Grid>
-        <Grid container xs={12} md={7} lg={8} spacing={4}>
-          <Measurement />
-        </Grid>
-        <Grid
-          xs={12}
-          container
-          justifyContent="space-between"
-          alignItems="center"
-          flexDirection={{ xs: 'column', sm: 'row' }}
-          sx={{ fontSize: '12px' }}
-        >
-          <Grid sx={{ order: { xs: 2, sm: 1 } }}>
-          </Grid>
-          <Grid container columnSpacing={1} sx={{ order: { xs: 1, sm: 2 } }}>
-            <Grid>
-              <Paper>
-                <TitleBox>
-                  Link A
-                </TitleBox>
-              </Paper>
-            </Grid>
-            <Grid>
-              <Paper>
-                <TitleBox>
-                  Link B
-                </TitleBox>
-              </Paper>
-            </Grid>
-            <Grid>
-              <Paper>
-                <TitleBox>
-                  Link C
-                </TitleBox>
-              </Paper>
-            </Grid>
-          </Grid>
+        <Grid item xs={12}>
+          <Measurement controller={controller} />
         </Grid>
       </Grid>
-    </Box>
+    </div>
   );
 }

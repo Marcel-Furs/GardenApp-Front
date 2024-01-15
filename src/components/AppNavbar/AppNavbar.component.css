@@ -3,7 +3,7 @@ nav {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding-left:  1px;   /*tutaj przesuwanie w prawo*/
+    padding-left:  1px; 
     padding-right: 10px;
     height: 100px;
     background-color: var(--primary-color);

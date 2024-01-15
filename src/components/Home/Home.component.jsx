@@ -142,7 +142,12 @@ function Home()
       <div className="home-container">
           <h1>Witajcie, Pasjonaci Ogrodnictwa!</h1>
           <p className="welcome-text">
-              Witamy w naszej specjalnie stworzonej aplikacji dla pasjonatów ogrodnictwa!...
+              Witamy w naszej specjalnie stworzonej aplikacji dla pasjonatów ogrodnictwa!
+            {!token && (
+                 <p> Zaprojektowano innowacyjną aplikację do zarządzania ogrodem, która zapewnia kontrolę nad mikrokontrolerami, katalogowanie roślin oraz obserwacje warunków
+                    atmosferycznych i zadań ogrodowych.
+                 </p>
+            )}
           </p>
           {token != null && (
               <div className="columns-container">
@@ -174,7 +179,7 @@ function Home()
                          )}
              </div>
                   <div className="column">
-                      <h2>Czy już to zrobiłeś?</h2>
+                      <h2>Czy to już zostało wykonane?</h2>
                       {ldays.map((day, index) => (
                         <Card key={index} className="day-card">
                             <CardContent>

@@ -17,5 +17,14 @@
     margin-top: 10px;
   }
   
-  /* Dodaj resztę styli w zależności od potrzeb */
+  .preview-image {
+    min-width: 100px;
+    min-height: 100px; 
+    max-width: 100%; 
+    max-height: 400px; 
+    object-fit: cover; 
+  }
   
+  .input-field {
+    margin-bottom: 20px;
+  }

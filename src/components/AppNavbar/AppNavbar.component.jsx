@@ -22,12 +22,13 @@ function AppNavbar()
         {url:"/", name:"", auth:true},
         { url: "/login", name: "Logowanie", auth: false },
         { url: "/register", name: "Rejestracja", auth: false },
+        { url: "/device", name: "Dodaj mikrokontroler", auth: true },
         { url: "/plant", name: "Dodaj rośline", auth: true },
         { url: "/plants", name: "Rośliny", auth: true },
         { url: "/measurement", name: "Pomiary", auth: true },
         { url: "/chart", name: "Wykresy", auth: true },
-        { url: "/task", name: "Zadania", auth: true },
         { url: "/pickcalendar", name: "Kalendarz", auth: true },
+        { url: "/diaries", name: "Pamiętnik", auth: true },
         { url: "/logout", name: "Wyloguj", auth: true }
     ]
 

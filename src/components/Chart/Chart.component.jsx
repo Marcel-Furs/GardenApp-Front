@@ -77,12 +77,12 @@ const Chart = () => {
           setChartData(data)
 
           const temperatures = data.map(item => ({
-            name: item.date, // Możesz zmienić na odpowiednią nazwę na osi X
+            name: item.date, 
             temperatura: item.temperature,
           }));
 
           const precipitations = data.map(item => ({
-            name: item.date, // Możesz zmienić na odpowiednią nazwę na osi X
+            name: item.date, 
             suma_opadow: item.precipitation,
           }));
 
@@ -91,7 +91,7 @@ const Chart = () => {
       }
 
       const onFail = (resp) => {
-          //toast.error("Nie istnieje dane miasto w bazie danych")
+         
       }
 
       await get2(ENDPOINTS.Data, parseInt(userId, 10), cityInput, onSuccess, onFail, token);
