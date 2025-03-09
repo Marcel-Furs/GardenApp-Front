@@ -1,2 +1,2 @@
 # GardenApp-Front
-Projekt inżynierski, wersja dla frontu
+Projekt, wersja dla frontu
