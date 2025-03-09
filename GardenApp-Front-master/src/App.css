@@ -1,0 +1,124 @@
+:root{
+  --primary-color: #013a01;
+  --secondary-color: rgb(100, 184, 135);
+  --active-color: #026d5b;
+  --font-color: #f3f2f2;
+  --button-color: #076137;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  background-color: #057e3349 !important; 
+}
+/*NOWE RZECZY*/
+.grid {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 15px;
+  margin: 10px;
+  padding: 0;
+}
+
+.grid li {
+  border: 1px solid var(--primary-color);
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.grid li:hover {
+  scale: 1.05;
+  cursor: pointer;
+}
+
+.grid a {
+  text-decoration: none;
+  color: var(--primary-color)
+}
+
+/* The Modal (background) */
+.modal-box {
+  display: block; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 99999; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  -webkit-animation-name: fadeIn; /* Fade in the background */
+  -webkit-animation-duration: 0.4s;
+  animation-name: fadeIn;
+  animation-duration: 0.4s
+}
+
+/* Modal Content */
+.modal-content {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  -webkit-animation-name: slideIn;
+  -webkit-animation-duration: 0.4s;
+  animation-name: slideIn;
+  animation-duration: 0.4s
+}
+
+/* The Close Button */
+.close {
+  color: white;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: rgb(0, 0, 0)c3c;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.modal-body {padding: 2px 16px;}
+
+.modal-footer {
+  padding: 2px 16px;
+  background-color: #5cb85c;
+  color: rgb(0, 0, 0);
+}
+
+/* Add Animation */
+@-webkit-keyframes slideIn {
+  from {bottom: -300px; opacity: 0} 
+  to {bottom: 0; opacity: 1}
+}
+
+@keyframes slideIn {
+  from {bottom: -300px; opacity: 0}
+  to {bottom: 0; opacity: 1}
+}
+
+@-webkit-keyframes fadeIn {
+  from {opacity: 0} 
+  to {opacity: 1}
+}
+
+@keyframes fadeIn {
+  from {opacity: 0} 
+  to {opacity: 1}
+}
+
+.css-4pax7l-MuiPickersLayout-root {
+  display: grid;
+  grid-auto-columns: max-content auto max-content;
+  grid-auto-rows: max-content auto max-content;
+  overflow: hidden;
+  min-width: 100px !important;
+  max-width: 400px !important;
+  background-color: var(--secondary-color) !important;
+}

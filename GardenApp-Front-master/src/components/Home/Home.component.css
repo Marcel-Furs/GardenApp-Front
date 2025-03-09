@@ -1,0 +1,38 @@
+.home-container {
+    text-align: center;
+    padding: 59px;
+    margin: 0 auto;
+    max-width: 1400px;
+}
+
+.welcome-text {
+    font-size: 25px;
+    line-height: 1.6;
+    margin-top: 10px;
+    color: #333;
+}
+
+.columns-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.column {
+    flex: 1;
+    margin: 0 10px;
+    /* Dodatkowe style dla kolumn */
+}
+
+.day-card {
+    margin-bottom: 20px; /* Odstęp między kartami */
+    border-radius: 8px; /* Zaokrąglone rogi */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Cień dla karty */
+}
+
+.day-card:nth-child(odd) {
+    background-color: #f0f8ff; /* Jasnoniebieski kolor dla kart nieparzystych */
+}
+
+.day-card:nth-child(even) {
+    background-color: #fff0f5; /* Jasnoróżowy kolor dla kart parzystych */
+}

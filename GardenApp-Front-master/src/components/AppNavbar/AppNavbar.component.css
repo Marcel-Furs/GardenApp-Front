@@ -1,0 +1,33 @@
+nav {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding-left:  1px; 
+    padding-right: 10px;
+    height: 100px;
+    background-color: var(--primary-color);
+    color: var(--font-color);
+  }
+
+  .menu {
+    list-style-type: none;
+    display: flex;
+    gap: 20px;
+  }
+
+  .navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+.nav-item {
+    margin-right: 20px; 
+    display: inline;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: #000; 
+}
